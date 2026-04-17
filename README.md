@@ -29,6 +29,7 @@ A lightweight, minimal HTTP server framework written in **Nim**, designed for si
 │   ├── script.nim
 │   └── http404.nim
 ├── public/               # Static files
+│   ├── HelloWorld.txt       # Example static file
 ├── components/               # Reusable UI components
 │   └── toggletext.nim
 ```
