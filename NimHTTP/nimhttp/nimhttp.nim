@@ -1,4 +1,4 @@
-import nimhttplib/[page, errorpage, staticfile, component]
+import nimhttplib/[page, errorpage, component]
 
 
-export page, errorpage, staticfile, component
+export page, errorpage, component
