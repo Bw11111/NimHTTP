@@ -4,6 +4,31 @@ import nimhttp/nimhttp
 
 var pages = @[homePage, script]
 
+proc serveDirectory(req: Request, dirPathA: string) {.async.} =
+  let fullPath = "public" & dirPathA
+  var dirPath = dirPathA;
+  if dirPath == "":
+    dirPath = "/static/"
+  if not dirExists(fullPath):
+    await req.respond(Http404, "Directory not found")
+    return
+
+  var html = "<h1>Index of " & dirPath & "</h1><ul>"
+
+  for kind, path in walkDir(fullPath):
+    let name = path.splitFile().name
+    let ext = path.splitFile().ext
+
+    if kind == pcFile:
+      html.add("<li><a href=\"" & dirPath & name & ext & "\">" & name & ext &  "</a></li>")
+
+    elif kind == pcDir:
+      html.add("<li><a href=\"" & dirPath & name & "/\">" & name & "/</a></li>")
+
+  html.add("</ul>")
+
+  await req.respond(Http200, html)
+
 proc serveStatic(req: Request, fpath: string) {.async.} =
   let path = fpath.replace("/static/", "")
   let filePath = "public/" & path
@@ -28,7 +53,15 @@ proc makeCb(pages: seq[Page], errorPage404: ErrorPage): proc (req: Request): Fut
   return proc (req: Request): Future[void] {.async, gcsafe.} =
     
     if req.url.path.startsWith("/static/"):
-      await serveStatic(req, req.url.path)
+      let path = req.url.path.replace("/static/", "")
+
+      let fullPath = "public/" & path
+
+      if dirExists(fullPath):
+        await serveDirectory(req, path)
+      else:
+        await serveStatic(req, path)
+
       return
 
     for data in pages:
