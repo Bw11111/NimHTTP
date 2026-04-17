@@ -28,6 +28,7 @@ A lightweight, minimal HTTP server framework written in **Nim**, designed for si
 │   ├── home.nim
 │   ├── script.nim
 │   └── http404.nim
+├── public/               # Static files
 ├── components/               # Reusable UI components
 │   └── toggletext.nim
 ```
@@ -135,14 +136,7 @@ body(
 
 ### Static Files
 
-Static routes can be manually defined as pages:
-
-```nim
-const script: Page = (Http200, "/static/script.js", """
-// JS here
-""")
-```
-
+Static files can be placed in the public directory.
 ---
 
 ## 📌 Example Routes
@@ -157,7 +151,6 @@ const script: Page = (Http200, "/static/script.js", """
 
 ## ⚠️ Limitations
 
-* No automatic static file serving
 * No middleware system
 * No parameterized routes (`/user/:id`)
 * Manual route registration required
@@ -166,7 +159,6 @@ const script: Page = (Http200, "/static/script.js", """
 
 ## 💡 Future Improvements
 
-* Static file directory support
 * Middleware system
 * Dynamic routing
 * Template system
